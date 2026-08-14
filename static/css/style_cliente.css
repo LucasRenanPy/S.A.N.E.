@@ -1,0 +1,206 @@
+:root {
+  --bg: #f7f9fb;
+  --card: #ffffff;
+  --accent: #12c0df;
+  --dark: #112342;
+  --muted: #6b7280;
+  --radius: 12px;
+  --ui-scale: 1;
+}
+
+/* base */
+html, body {
+  margin: 0;
+  padding: 0;
+  font-family: 'League Spartan', sans-serif;
+  background: var(--bg);
+  color: var(--dark);
+  overflow-x: hidden;
+}
+
+/* controle zoom */
+.font-controls {
+  font-family: 'League Spartan', sans-serif;
+  position: fixed;
+  top: 12px;
+  right: 12px;
+  display: flex;
+  gap: 8px;
+  z-index: 10000;
+}
+.font-controls button {
+  font-family: 'League Spartan', sans-serif;
+  background: var(--dark);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 10px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.font-controls button:hover {
+  background: var(--bg);
+  color: var(--dark);
+}
+
+/* estrutura */
+.page-wrapper {
+  transform: scale(var(--ui-scale));
+  transform-origin: top left;
+  width: calc(100vw / var(--ui-scale));
+  min-height: calc(100vh / var(--ui-scale));
+}
+
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* HEADER */
+.site-header {
+  background: var(--accent);
+  color: #fff;
+  padding: 16px 0;
+}
+.header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.brand-logo {
+  width: 180px;
+  height: auto;
+}
+.btn.login {
+  background: #fff;
+  color: var(--dark);
+  border-radius: var(--radius);
+  padding: 8px 18px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+/* HERO */
+.hero-content h1 {
+  font-size: 2rem;
+  margin-bottom: 10px;
+}
+.hero-content p {
+  color: var(--muted);
+}
+
+/* CATÁLOGO */
+.catalog {
+  padding: 40px 0;
+}
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+}
+.card {
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 16px;
+  box-shadow: 0 8px 24px rgba(17,35,66,0.06);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: transform .2s;
+}
+.card:hover {
+  transform: translateY(-5px);
+}
+.card img {
+  width: 100%;
+  height: 180px;
+  object-fit: contain;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+.card-inner h3 {
+  margin: 6px 0;
+  font-weight: 700;
+  color: var(--dark);
+}
+.card-inner .categoria {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+.price-old {
+  text-decoration: line-through;
+  color: #999;
+  margin-right: 6px;
+}
+.price-new {
+  color: #1b8a0f;
+  font-weight: 700;
+}
+.btn.comprar {
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  padding: 8px 12px;
+  border-radius: var(--radius);
+  cursor: pointer;
+  font-weight: 700;
+  margin-top: 8px;
+}
+.btn.comprar:hover {
+  background: var(--dark);
+}
+.flash-msg {
+  background: #d4edda;
+  color: #155724;
+  padding: 10px;
+  border-radius: 6px;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+/* VENDAS */
+.faq {
+  background: var(--card);
+  padding: 40px 0;
+  margin-top: 30px;
+  box-shadow: 0 8px 24px rgba(17,35,66,0.05);
+}
+.faq h2 {
+  color: var(--dark);
+  margin-bottom: 20px;
+  text-align: center;
+}
+.faq-item {
+  background: var(--bg);
+  border-radius: var(--radius);
+  padding: 12px 16px;
+  margin-bottom: 10px;
+}
+.faq-row {
+  display: flex;
+  justify-content: space-between;
+  font-weight: 600;
+}
+.faq-answer {
+  color: var(--muted);
+  margin-top: 6px;
+}
+
+/* FOOTER */
+.site-footer {
+  background: var(--accent);
+  color: #fff;
+  text-align: center;
+  padding: 20px 0;
+}
+.footer-inner a {
+  color: #fff;
+  text-decoration: underline;
+}
+
+/* Responsivo */
+@media (max-width: 600px) {
+  .cards { grid-template-columns: 1fr; }
+  .header-inner { flex-direction: column; gap: 10px; }
+}

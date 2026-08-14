@@ -1,0 +1,26 @@
+# Ambiente virtual
+venv/
+.venv/
+
+# Variáveis de ambiente
+.env
+
+# Cache do Python
+__pycache__/
+*.py[cod]
+
+# Sessões do Flask
+flask_session/
+
+# Configurações do VS Code
+.vscode/
+
+# Arquivos temporários
+*.log
+*.tmp
+
+# Uploads dos usuários
+static/uploads/*
+
+# Mantém a pasta uploads no projeto
+!static/uploads/.gitkeep

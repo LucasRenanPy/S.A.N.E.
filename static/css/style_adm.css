@@ -1,0 +1,221 @@
+:root {
+  --bg: #f7f9fb;
+  --card: #ffffff;
+  --accent: #12c0df;
+  --dark: #112342;
+  --muted: #6b7280;
+  --radius: 12px;
+  --ui-scale: 1;
+}
+
+/* base */
+html, body {
+  margin: 0;
+  padding: 0;
+  font-family: 'League Spartan', sans-serif;
+  background: var(--bg);
+  color: var(--dark);
+  overflow-x: hidden;
+}
+
+/* controle zoom */
+.font-controls {
+  font-family: 'League Spartan', sans-serif;
+  position: fixed;
+  top: 12px;
+  right: 12px;
+  display: flex;
+  gap: 8px;
+  z-index: 10000;
+}
+.font-controls button {
+  font-family: 'League Spartan', sans-serif;
+  background: var(--dark);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 10px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.font-controls button:hover {
+  background: var(--bg);
+  color: var(--dark);
+}
+
+/* estrutura */
+.page-wrapper {
+  transform: scale(var(--ui-scale));
+  transform-origin: top left;
+  width: calc(100vw / var(--ui-scale));
+  min-height: calc(100vh / var(--ui-scale));
+}
+
+
+/* header */
+.site-header {
+  background: var(--accent);
+  color: white;
+  padding: 14px 0;
+}
+.header-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+.brand-logo {
+  width: 180px;
+}
+.btn.login {
+  background: white;
+  color: var(--dark);
+  border-radius: var(--radius);
+  padding: 8px 16px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+/* container base */
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* formulário de cadastro */
+.add-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 16px;
+  box-shadow: 0 8px 24px rgba(17,35,66,0.05);
+}
+.add-form input, .add-form select {
+  flex: 1;
+  min-width: 180px;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+.btn.salvar {
+  background: var(--accent);
+  color: white;
+  border: none;
+  border-radius: var(--radius);
+  padding: 10px 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.btn.salvar:hover {
+  background: var(--dark);
+}
+
+/* cards */
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 20px;
+  margin-top: 20px;
+}
+.card {
+  background: var(--card);
+  border-radius: var(--radius);
+  box-shadow: 0 8px 24px rgba(17,35,66,0.06);
+  padding: 14px;
+  text-align: center;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+.card:hover {
+  transform: translateY(-5px);
+}
+.card img {
+  width: 100%;
+  height: 150px;
+  object-fit: contain;
+  border-radius: 8px;
+}
+
+/* modal */
+.modal {
+  display: none;
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.6);
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+.modal-content {
+  background: white;
+  border-radius: var(--radius);
+  padding: 20px;
+  width: 90%;
+  max-width: 500px;
+}
+.modal-content input {
+  width: 100%;
+  margin-bottom: 10px;
+  padding: 8px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+.modal-actions {
+  display: flex;
+  justify-content: space-between;
+}
+.btn.danger {
+  background: #e63946;
+  color: white;
+}
+
+/* relatório */
+.faq {
+  margin-top: 40px;
+}
+.faq details {
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 12px 16px;
+  margin-bottom: 10px;
+  box-shadow: 0 4px 12px rgba(17,35,66,0.05);
+}
+.faq summary {
+  font-weight: 700;
+  cursor: pointer;
+}
+.faq-item {
+  background: var(--bg);
+  border-radius: var(--radius);
+  padding: 10px;
+  margin-top: 8px;
+}
+.faq-row {
+  display: flex;
+  justify-content: space-between;
+  font-weight: 600;
+}
+.faq-answer {
+  color: var(--muted);
+  margin-top: 6px;
+}
+
+/* footer */
+.site-footer {
+  background: var(--accent);
+  color: white;
+  text-align: center;
+  padding: 20px 0;
+}
+
+/* responsivo */
+@media (max-width: 600px) {
+  .add-form { flex-direction: column; }
+  .cards { grid-template-columns: 1fr; }
+}

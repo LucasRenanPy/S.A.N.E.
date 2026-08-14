@@ -1,0 +1,156 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins&family=Roboto:wght@100;300;400;500;700;900&family=Source+Sans+Pro:wght@200;300;400;600;700;900&display=swap');
+html, body {
+  background: var(--bg-light) !important;
+  color: var(--text) !important;
+}
+
+@media (prefers-color-scheme: dark) {
+  html, body {
+    background: var(--bg-light) !important;
+    color: var(--text) !important;
+  }
+}
+
+
+:root {
+  --primary: #00bcd4;   /* Fundo turquesa */
+  --secondary: #00838f; /* Destaques */
+  --submit: #00796b;    /* Botão enviar */
+  --shadow: #00838f;    /* Sombra azul escuro */
+  --text: #212121;      /* Texto escuro */
+  --bg-light: #ffffff;  /* Fundo claro */
+}
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'poppins', sans-serif;
+}
+
+body {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--primary)!important;;
+  color: var(--text)!important;;
+}
+
+.container {
+  padding: 6px;
+  width: 350px;
+  min-height: 450px;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  border-radius: 10px;
+  background-color: var(--bg-light)!important;;
+  box-shadow: 0 0 20px 0 var(--shadow)!important;;
+}
+
+form {
+  position: absolute;
+  margin-top: 80px;
+  transition: .5s;
+  width: 300px;
+  min-height: 400px;
+  height: auto;
+}
+
+.buttonsForm {
+  margin-top: 40px;
+  position: relative;
+  border-radius: 30px;
+  box-shadow: 0 0 7px 0 rgb(0, 0, 19)!important;;
+}
+
+.buttonsForm button {
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  position: relative;
+  padding: 10px 29px;
+  font-weight: bold;
+  color: #212121;          /* preto padrão */
+  transition: color 0.3s;  /* transição suave */
+  z-index: 1;
+}
+
+.buttonsForm button.active {
+  color: #fff; /* branco quando ativo */
+}
+
+.btnColor {
+  position: absolute;
+  width: 108px;
+  height: 100%;
+  background:rgb(0, 0, 52)!important;;
+  border-radius: 30px;
+  transition: .3s;
+}
+
+input[type="text"], input[type="password"] {
+  border: none;
+  margin-top: 40px;
+  border-radius: 60px;
+  padding: 8px 0 8px 35px;
+  outline: none;
+  width: 100%;
+  background: #f5f5f5!important;;
+  color: var(--text)!important;;
+}
+
+button[type="submit"] {
+  background: #00796b;
+  color: white;
+  border-radius: 30px;
+  width: 100%;
+  border: none;
+  outline: none;
+  padding: 12px; /* padding igual em todos os lados */
+  font-size: 15px;
+  margin-top: 40px;
+  cursor: pointer;
+
+  display: flex;              /* flexbox */
+  align-items: center;        /* centraliza vertical */
+  justify-content: center;    /* centraliza horizontal */
+  text-align: center;         /* garante centralização do texto */
+}
+
+
+.divCheck {
+  margin: 10px 0 0 5px;
+  width: 80%;
+  font-size: 13px;
+}
+
+#signin {
+  left: 25px;
+}
+
+#signup {
+  left: 450px;
+}
+
+i {
+  position: absolute;
+  left: 0;
+  padding: 10px 10px;
+}
+
+.iEmail {
+  top: 40px;
+}
+
+.iPassword {
+  top: 114px;
+}
+
+.iPassword2 {
+  top: 190px;
+}

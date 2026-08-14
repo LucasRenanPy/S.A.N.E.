@@ -1,0 +1,427 @@
+{% extends "base_admin.html" %}
+
+{% block titulo %}
+Painel Administrativo
+{% endblock %}
+
+{% block conteudo %}
+
+<section class="hero">
+    <div class="container">
+
+        <h1>Cadastro de Produtos e Serviços</h1>
+
+        <p class="muted">
+            Adicione novos itens para o catálogo abaixo.
+        </p>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for categoria, message in messages %}
+                    <div class="flash-msg {{ categoria }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <form
+            method="POST"
+            action="{{ url_for('produtos.cadastrar_produto') }}"
+            enctype="multipart/form-data"
+            class="add-form"
+        >
+
+            <select
+                name="tipo"
+                id="tipo-select"
+                required
+                onchange="toggleServiceFields()"
+            >
+                <option value="" disabled selected>
+                    Selecione tipo
+                </option>
+
+                <option value="produto">
+                    Produto
+                </option>
+
+                <option value="servico">
+                    Serviço
+                </option>
+            </select>
+
+            <input
+                type="text"
+                name="nome"
+                placeholder="Nome"
+                required
+            >
+
+            <input
+                type="text"
+                name="categoria"
+                placeholder="Categoria"
+                required
+            >
+
+            <input
+                type="number"
+                step="0.01"
+                name="preco_base"
+                placeholder="Preço (R$)"
+                required
+            >
+
+            <div id="estoque-field">
+                <input
+                    type="number"
+                    name="estoque"
+                    placeholder="Estoque"
+                >
+            </div>
+
+            <input
+                type="file"
+                name="imagem"
+                accept="image/*"
+            >
+
+            <div id="service-fields" style="display:none;">
+
+                <label>
+                    <input
+                        type="checkbox"
+                        name="permitir_agendamento"
+                        value="1"
+                    >
+
+                    Permitir agendamento
+                </label>
+
+                <label>
+                    Duração (min):
+
+                    <input
+                        type="number"
+                        name="duracao_minutos"
+                        min="10"
+                        value="60"
+                    >
+                </label>
+
+            </div>
+
+            <button type="submit" class="btn salvar">
+                Adicionar
+            </button>
+
+        </form>
+
+    </div>
+</section>
+
+<section class="catalog">
+
+    <div class="container">
+
+        <h2>Produtos Cadastrados</h2>
+
+        <div class="cards">
+
+            {% for p in produtos %}
+
+            <div
+                class="card"
+                onclick="openEditForm(
+                    {{ p.id }},
+                    '{{ p.nome }}',
+                    '{{ p.categoria }}',
+                    {{ p.preco_base }},
+                    'produto',
+                    {{ p.estoque }},
+                    null,
+                    null
+                )"
+            >
+
+                <img
+                    src="{{ url_for('static', filename=p.imagem or 'images/car-card.png') }}"
+                    alt="{{ p.nome }}"
+                >
+
+                <div class="card-inner">
+
+                    <h3>{{ p.nome }}</h3>
+
+                    <p>
+                        R$ {{ "%.2f"|format(p.preco_base) }}
+                    </p>
+
+                </div>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+
+        <h2>Serviços Cadastrados</h2>
+
+        <div class="cards">
+
+            {% for s in servicos %}
+
+            <div
+                class="card"
+                onclick="openEditForm(
+                    {{ s.id }},
+                    '{{ s.nome }}',
+                    '{{ s.categoria }}',
+                    {{ s.preco_base }},
+                    'servico',
+                    0,
+                    {{ s.permitir_agendamento|default(0) }},
+                    {{ s.duracao_minutos|default(60) }}
+                )"
+            >
+
+                <img
+                    src="{{ url_for('static', filename=s.imagem or 'images/car-card.png') }}"
+                    alt="{{ s.nome }}"
+                >
+
+                <div class="card-inner">
+
+                    <h3>{{ s.nome }}</h3>
+
+                    <p>
+                        R$ {{ "%.2f"|format(s.preco_base) }}
+                    </p>
+
+                </div>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+</section>
+
+<section class="faq" id="vendas">
+
+    <div class="container">
+
+        <h2>Relatório de Vendas</h2>
+
+        <details open>
+
+            <summary>
+                <strong>Vendas de Produtos</strong>
+            </summary>
+
+            {% for v in vendas_produtos %}
+
+            <div class="faq-item">
+
+                <div class="faq-row">
+
+                    <strong class="q">
+                        {{ v.produto_nome }}
+                    </strong>
+
+                    <span>
+                        R$ {{ "%.2f"|format(v.valor_total) }}
+                    </span>
+
+                </div>
+
+                <p class="faq-answer">
+
+                    {{ v.quantidade }}x |
+                    {{ v.metodo_pagamento }} |
+                    {{ v.status_pagamento }}
+
+                    <br>
+
+                    {{ v.data.strftime('%d/%m/%Y %H:%M') }}
+
+                </p>
+
+            </div>
+
+            {% endfor %}
+
+        </details>
+
+
+        <details>
+
+            <summary>
+                <strong>Vendas de Serviços</strong>
+            </summary>
+
+            {% for v in vendas_servicos %}
+
+            <div class="faq-item">
+
+                <div class="faq-row">
+
+                    <strong class="q">
+                        {{ v.produto_nome }}
+                    </strong>
+
+                    <span>
+                        R$ {{ "%.2f"|format(v.valor_total) }}
+                    </span>
+
+                </div>
+
+                <p class="faq-answer">
+
+                    {{ v.metodo_pagamento }} |
+                    {{ v.status_pagamento }}
+
+                    <br>
+
+                    {{ v.data.strftime('%d/%m/%Y %H:%M') }}
+
+                </p>
+
+            </div>
+
+            {% endfor %}
+
+        </details>
+
+    </div>
+
+</section>
+
+<div id="editOverlay" class="modal">
+
+    <div class="modal-content">
+
+        <form
+          id="editForm"
+          method="POST"
+          enctype="multipart/form-data"
+          action="{{ url_for('produtos.editar_produto', id=0) }}"
+        >
+
+            <h3>Editar Item</h3>
+
+            <input
+                type="hidden"
+                name="produto_id"
+                id="produto_id"
+            >
+
+            <input
+                type="text"
+                name="nome"
+                id="nome"
+                placeholder="Nome"
+            >
+
+            <input
+                type="text"
+                name="categoria"
+                id="categoria"
+                placeholder="Categoria"
+            >
+
+            <input
+                type="number"
+                name="preco_base"
+                step="0.01"
+                id="preco_base"
+                placeholder="Preço"
+            >
+
+            <div id="edit-estoque">
+
+                <input
+                    type="number"
+                    name="estoque"
+                    id="estoque"
+                    placeholder="Estoque"
+                >
+
+            </div>
+
+                <input
+                    type="file"
+                    name="imagem"
+                    id="imagem"
+                    accept="image/*"
+                >
+
+            <div id="edit-servico" style="display:none;">
+
+                <label>
+                    <input
+                        type="checkbox"
+                        name="permitir_agendamento"
+                        id="permitir_agendamento"
+                    >
+
+                    Permitir Agendamento
+                </label>
+
+                <label>
+                    Duração (min):
+
+                    <input
+                        type="number"
+                        name="duracao_minutos"
+                        id="duracao_minutos"
+                    >
+                </label>
+
+            </div>
+
+            <div class="modal-actions">
+
+                <button
+                    type="submit"
+                    class="btn salvar"
+                >
+                    Salvar
+                </button>
+
+                <button
+                    type="button"
+                    class="btn danger"
+                    onclick="excluirItem()"
+                >
+                    Excluir
+                </button>
+
+                <button
+                    type="button"
+                    class="btn"
+                    onclick="closeEditForm()"
+                >
+                    Cancelar
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/admin.js') }}"></script>
+{% endblock %}
+
