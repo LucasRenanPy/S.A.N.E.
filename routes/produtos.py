@@ -5,8 +5,10 @@ from flask import (
     redirect,
     url_for,
     session,
-    flash,
+    flash
 )
+
+import json
 
 from extensions import mysql, get_cursor
 
@@ -161,6 +163,17 @@ def editar_produto(id):
     categoria = request.form.get("categoria", "").strip()
     descricao = request.form.get("descricao", "").strip()
     imagem = request.files.get("imagem")
+    
+    dias_disponiveis = request.form.getlist("dias_disponiveis")
+    dias_json = json.dumps(dias_disponiveis)
+    
+    horarios_lista = [
+    horario.strip()
+    for horario in request.form.getlist("horarios_disponiveis")
+    if horario.strip()
+]
+
+    horarios_json = json.dumps(horarios_lista)
 
     try:
         preco_base = float(request.form.get("preco_base") or 0)
@@ -310,7 +323,9 @@ def editar_produto(id):
                         preco_base = %s,
                         permitir_agendamento = %s,
                         duracao_minutos = %s,
-                        imagem = %s
+                        imagem = %s,
+                        dias_disponiveis = %s,
+                        horarios_disponiveis = %s
                     WHERE id = %s
                     AND empresa_id = %s
                     """,
@@ -322,6 +337,8 @@ def editar_produto(id):
                         permitir_agendamento,
                         duracao_minutos,
                         caminho_imagem,
+                        dias_json,
+                        horarios_json,
                         id,
                         empresa_id
                     )
@@ -336,7 +353,9 @@ def editar_produto(id):
                         descricao = %s,
                         preco_base = %s,
                         permitir_agendamento = %s,
-                        duracao_minutos = %s
+                        duracao_minutos = %s,
+                        dias_disponiveis = %s,
+                        horarios_disponiveis = %s
                     WHERE id = %s
                     AND empresa_id = %s
                     """,
@@ -347,6 +366,8 @@ def editar_produto(id):
                         preco_base,
                         permitir_agendamento,
                         duracao_minutos,
+                        dias_json,
+                        horarios_json,
                         id,
                         empresa_id
                     )

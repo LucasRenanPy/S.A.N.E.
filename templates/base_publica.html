@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        {% block titulo %}
+        S.A.N.E.
+        {% endblock %}
+    </title>
+
+    <!-- Fonte da aplicação -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+
+    <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin
+    >
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@300;500;700;800&display=swap"
+        rel="stylesheet"
+    >
+
+    <!-- CSS específico da loja -->
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/style_cliente.css') }}"
+    >
+
+</head>
+
+
+<body>
+
+    <!-- CONTROLES DE TAMANHO DA FONTE -->
+
+    <div class="font-controls">
+
+        <button id="fontInc">
+            A+
+        </button>
+
+        <button id="fontDec">
+            A-
+        </button>
+
+    </div>
+
+
+    <!-- ESTRUTURA PRINCIPAL -->
+
+    <div class="page-wrapper">
+
+
+        <!-- HEADER -->
+
+        <header class="site-header">
+
+            <div class="container header-inner">
+
+                <div class="brand">
+
+                    <strong>
+                        {{ nome if nome is defined else 'S.A.N.E.' }}
+                    </strong>
+
+                </div>
+
+
+                <div class="header-actions">
+
+                    {% block header_actions %}
+                    {% endblock %}
+
+                </div>
+
+            </div>
+
+        </header>
+
+
+        <!-- CONTEÚDO -->
+
+        <main class="content-center">
+
+            {% block conteudo %}
+            {% endblock %}
+
+        </main>
+
+
+        <!-- FOOTER -->
+
+        <footer class="site-footer">
+
+            <div class="container footer-inner">
+
+                <p>
+                    © <strong>S.A.N.E</strong>
+                    — Sistema de Apoio a Negócios e Empresas
+                </p>
+
+            </div>
+
+        </footer>
+
+
+    </div>
+
+
+    <!-- JS comum da loja -->
+
+    <script src="{{ url_for('static', filename='js/loja.js') }}"></script>
+</body>
+
+</html>

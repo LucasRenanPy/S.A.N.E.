@@ -219,3 +219,18 @@ html, body {
   .add-form { flex-direction: column; }
   .cards { grid-template-columns: 1fr; }
 }
+
+.dias-disponiveis label {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 8px;
+    margin-bottom: 6px;
+    cursor: pointer;
+}
+
+.dias-disponiveis label input[type="checkbox"] {
+    margin: 0;
+    width: auto;
+    flex: 0 0 auto;
+}

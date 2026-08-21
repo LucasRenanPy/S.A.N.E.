@@ -1,0 +1,321 @@
+{% extends "base_publica.html" %}
+
+
+{% block titulo %}
+{{ nome }} — S.A.N.E.
+{% endblock %}
+
+
+{% block header_actions %}
+
+<a
+    href="#catalogo"
+    class="btn login"
+>
+    Catálogo
+</a>
+
+{% endblock %}
+
+
+{% block conteudo %}
+
+<section class="hero">
+
+    <div class="container hero-inner">
+
+        <section class="hero-content">
+
+            <h1>
+                {{ nome }}
+            </h1>
+
+            <p class="muted">
+                Explore os produtos e serviços disponíveis
+                e faça sua compra ou agende um serviço.
+            </p>
+
+        </section>
+
+    </div>
+
+</section>
+
+
+<section
+    class="catalog"
+    id="catalogo"
+>
+
+    <div class="container">
+
+        <div class="cards">
+
+    {% for p in produtos %}
+
+    <div class="card">
+
+        <!-- IMAGEM -->
+
+        {% if p.imagem %}
+
+            <img
+                src="{{ url_for('static', filename=p.imagem) }}"
+                alt="{{ p.nome }}"
+            >
+
+        {% else %}
+
+            <img
+                src="{{ url_for('static', filename='images/car-card.png') }}"
+                alt="Imagem padrão"
+            >
+
+        {% endif %}
+
+
+        <div class="card-inner">
+
+            <!-- INFORMAÇÕES -->
+
+            <h3>
+                {{ p.nome }}
+            </h3>
+
+            <p class="categoria">
+                {{ p.categoria }}
+            </p>
+
+
+            <!-- PREÇO -->
+
+            <p>
+
+                {% if p.preco_promocional %}
+
+                    <span class="price-old">
+                        R$ {{ "%.2f"|format(p.preco_base) }}
+                    </span>
+
+                    <span class="price-new">
+                        R$ {{ "%.2f"|format(p.preco_promocional) }}
+                    </span>
+
+                {% else %}
+
+                    <span class="price">
+                        R$ {{ "%.2f"|format(p.preco_base) }}
+                    </span>
+
+                {% endif %}
+
+            </p>
+
+
+            <!-- PRODUTO -->
+
+            {% if p.tipo == 'produto' %}
+
+                <p class="estoque">
+                    Estoque: {{ p.estoque }}
+                </p>
+
+                <form
+                    method="POST"
+                    action="{{ url_for(
+                        'loja.comprar',
+                        produto_id=p.id
+                    ) }}"
+                >
+
+                    <input
+                        type="hidden"
+                        name="identificador"
+                        value="{{ identificador }}"
+                    >
+
+                    <input
+                        type="number"
+                        name="quantidade"
+                        min="1"
+                        max="{{ p.estoque }}"
+                        required
+                        placeholder="Qtd."
+                    >
+
+                    <select name="metodo_pagamento">
+
+                        <option value="pix">
+                            Pix
+                        </option>
+
+                        <option value="cartao">
+                            Cartão
+                        </option>
+
+                        <option value="dinheiro">
+                            Dinheiro
+                        </option>
+
+                    </select>
+
+                    <button
+                        type="submit"
+                        class="btn comprar"
+                    >
+                        Comprar
+                    </button>
+
+                </form>
+
+
+            <!-- SERVIÇO COM AGENDAMENTO -->
+
+            {% elif p.tipo == 'servico'
+                  and p.permitir_agendamento == 1 %}
+
+                <form
+                    method="POST"
+                    action="{{ url_for('loja.agendar_servico') }}"
+                    id="agendamento-form-{{ p.id }}"
+                >
+
+                    <input
+                        type="hidden"
+                        name="servico_id"
+                        value="{{ p.id }}"
+                    >
+
+                    <input
+                        type="hidden"
+                        name="identificador"
+                        value="{{ identificador }}"
+                    >
+
+                    <input
+                        type="text"
+                        name="cliente_nome"
+                        placeholder="Seu nome"
+                        required
+                    >
+
+                    <input
+                        type="date"
+                        name="data"
+                        min="{{ hoje }}"
+                        required
+                        data-servico-id="{{ p.id }}"
+                        onchange="console.log(
+                            'DATA ALTERADA:',
+                            this.value,
+                            'SERVIÇO:',
+                            this.dataset.servicoId
+                        ); loadHorarios(
+                            this.dataset.servicoId,
+                            this.value
+                        )"
+                    >
+
+                    <select
+                        name="hora"
+                        id="horarios-{{ p.id }}"
+                        required
+                    >
+
+                        <option value="">
+                            Selecione um horário
+                        </option>
+
+                    </select>
+
+                    <select name="metodo_pagamento">
+
+                        <option value="pix">
+                            Pix
+                        </option>
+
+                        <option value="cartao">
+                            Cartão
+                        </option>
+
+                        <option value="dinheiro">
+                            Dinheiro
+                        </option>
+
+                    </select>
+
+                    <button
+                        type="submit"
+                        class="btn comprar"
+                    >
+                        Agendar
+                    </button>
+
+                </form>
+
+
+            <!-- SERVIÇO SEM AGENDAMENTO -->
+
+            {% else %}
+
+                <form
+                    method="POST"
+                    action="{{ url_for(
+                        'loja.comprar',
+                        produto_id=p.id
+                    ) }}"
+                >
+
+                    <input
+                        type="hidden"
+                        name="quantidade"
+                        value="1"
+                    >
+
+                    <input
+                        type="hidden"
+                        name="identificador"
+                        value="{{ identificador }}"
+                    >
+
+                    <select name="metodo_pagamento">
+
+                        <option value="pix">
+                            Pix
+                        </option>
+
+                        <option value="cartao">
+                            Cartão
+                        </option>
+
+                        <option value="dinheiro">
+                            Dinheiro
+                        </option>
+
+                    </select>
+
+                    <button
+                        type="submit"
+                        class="btn comprar"
+                    >
+                        Contratar Serviço
+                    </button>
+
+                </form>
+
+            {% endif %}
+
+        </div>
+
+
+    </div>
+
+    {% endfor %}
+
+</div>
+
+    </div>
+
+</section>
+
+{% endblock %}
