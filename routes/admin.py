@@ -57,18 +57,22 @@ def painel_admin(identificador):
             produtos
                 )
         
-        cur.execute("""SELECT
-                    id, 
-                    nome,
-                    categoria,
-                    preco_base,
-                    imagem,
-                    permitir_agendamento,
-                    duracao_minutos
-                    FROM produtos WHERE empresa_id = %s
-                    AND tipo = 'servico' 
+        cur.execute("""
+                    SELECT
+                        id,
+                        nome,
+                        categoria,
+                        preco_base,
+                        imagem,
+                        permitir_agendamento,
+                        duracao_minutos,
+                        dias_disponiveis,
+                        horarios_disponiveis
+                    FROM produtos
+                    WHERE empresa_id = %s
+                    AND tipo = 'servico'
                     ORDER BY nome
-                    """, (empresa_id,))
+                """, (empresa_id,))
         
         servicos = cur.fetchall()
         

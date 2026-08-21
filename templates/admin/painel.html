@@ -175,16 +175,15 @@ Painel Administrativo
 
             <div
                 class="card"
-                onclick="openEditForm(
-                    {{ s.id }},
-                    '{{ s.nome }}',
-                    '{{ s.categoria }}',
-                    {{ s.preco_base }},
-                    'servico',
-                    0,
-                    {{ s.permitir_agendamento|default(0) }},
-                    {{ s.duracao_minutos|default(60) }}
-                )"
+                data-id="{{ s.id }}"
+                data-nome="{{ s.nome }}"
+                data-categoria="{{ s.categoria }}"
+                data-preco="{{ s.preco_base }}"
+                data-agendar="{{ s.permitir_agendamento|default(0) }}"
+                data-duracao="{{ s.duracao_minutos|default(60) }}"
+                data-dias="{{ s.dias_disponiveis|default('[]') }}"
+                data-horarios="{{ s.horarios_disponiveis|default('[]') }}"
+                onclick="openEditFormFromCard(this)"
             >
 
                 <img
@@ -382,6 +381,70 @@ Painel Administrativo
                         id="duracao_minutos"
                     >
                 </label>
+
+                <div class="dias-disponiveis">
+
+                    <p>Dias disponíveis:</p>
+
+                    <label>
+                        <input type="checkbox" name="dias_disponiveis" value="segunda">
+                        Segunda
+                    </label>
+
+                    <label>
+                        <input type="checkbox" name="dias_disponiveis" value="terca">
+                        Terça
+                    </label>
+
+                    <label>
+                        <input type="checkbox" name="dias_disponiveis" value="quarta">
+                        Quarta
+                    </label>
+
+                    <label>
+                        <input type="checkbox" name="dias_disponiveis" value="quinta">
+                        Quinta
+                    </label>
+
+                    <label>
+                        <input type="checkbox" name="dias_disponiveis" value="sexta">
+                        Sexta
+                    </label>
+
+                    <label>
+                        <input type="checkbox" name="dias_disponiveis" value="sabado">
+                        Sábado
+                    </label>
+
+                    <label>
+                        <input type="checkbox" name="dias_disponiveis" value="domingo">
+                        Domingo
+                    </label>
+
+                </div>
+
+                <div class="horarios-disponiveis">
+
+                    <p>Horários disponíveis:</p>
+
+                    <div id="horarios-container">
+
+                        <input
+                            type="time"
+                            name="horarios_disponiveis"
+                        >
+
+                    </div>
+
+                    <button
+                        type="button"
+                        class="btn"
+                        onclick="adicionarHorario()"
+                    >
+                        + Adicionar horário
+                    </button>
+
+                </div>
 
             </div>
 
