@@ -19,6 +19,8 @@ from utils import (
 
 from extensions import get_cursor, mysql
 
+from MySQLdb import IntegrityError
+
 import logging
 logger = logging.getLogger(__name__)
 
@@ -787,8 +789,43 @@ def agendar_servico():
             "success"
         )
 
-    except Exception:
+    except IntegrityError as e:
 
+        mysql.connection.rollback()
+
+        if (
+            e.args
+            and e.args[0] == 1062
+            and "uq_agendamento_horario" in str(e)
+        ):
+
+            logger.warning(
+                "Conflito de horário: serviço=%s, data=%s, hora=%s",
+                servico_id,
+                data,
+                hora
+            )
+
+            flash(
+                "Este horário acabou de ser reservado por outra pessoa. "
+                "Escolha outro horário.",
+                "warning"
+            )
+
+        else:
+
+            logger.exception(
+                "Erro de integridade ao agendar serviço: servico_id=%s",
+                servico_id
+            )
+
+            flash(
+                "Não foi possível realizar o agendamento.",
+                "danger"
+            )
+
+    except Exception:
+        
         mysql.connection.rollback()
 
         logger.exception(

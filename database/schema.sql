@@ -112,6 +112,12 @@ CREATE TABLE agendamentos (
 
     hora TIME NOT NULL,
 
+    UNIQUE KEY uq_agendamento_horario (
+        servico_id,
+        data,
+        hora
+    ),
+
     FOREIGN KEY (servico_id)
         REFERENCES produtos(id)
         ON DELETE CASCADE
@@ -171,4 +177,6 @@ CREATE TABLE horarios_bloqueados (
     UNIQUE(data, hora)
 );
 
-drop database catalogo_db;
+
+
+
