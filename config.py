@@ -16,6 +16,11 @@ class Config:
 
     SESSION_TYPE = "filesystem"
     
+    SESSION_COOKIE_HTTPONLY = True
+    SESSION_COOKIE_SECURE = False
+    SESSION_COOKIE_SAMESITE = "Lax"
+    
+    
     UPLOAD_FOLDER = "static/uploads"
 
     ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg", "webp"}

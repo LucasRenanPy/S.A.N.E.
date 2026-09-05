@@ -11,6 +11,7 @@ from flask import (
 import json
 
 from extensions import mysql, get_cursor
+from decorators import login_required
 
 import os
 
@@ -50,13 +51,10 @@ def salvar_imagem(imagem):
 produtos_bp = Blueprint("produtos", __name__)
 
 @produtos_bp.route("/produto/cadastrar", methods=["POST"])
+@login_required
 def cadastrar_produto():
     
     logger.info("Entrou em cadastrar_produto")
-    
-    if "usuario_id" not in session:
-        flash("Faça login.", "warning")
-        return redirect(url_for("auth.login"))
     
     tipo = request.form.get("tipo")
 
@@ -153,11 +151,8 @@ def cadastrar_produto():
     return redirect(request.referrer)
 
 @produtos_bp.route("/produto/editar/<int:id>", methods=["POST"])
+@login_required
 def editar_produto(id):
-
-    if "usuario_id" not in session:
-        flash("Faça login.", "warning")
-        return redirect(url_for("auth.login"))
 
     nome = request.form.get("nome", "").strip()
     categoria = request.form.get("categoria", "").strip()
@@ -398,11 +393,8 @@ def editar_produto(id):
     return redirect(request.referrer)
 
 @produtos_bp.route("/produto/excluir/<int:id>", methods=["POST"])
+@login_required
 def excluir_produto(id):
-
-    if "usuario_id" not in session:
-        flash("Faça login.", "warning")
-        return redirect(url_for("auth.login"))
 
     cur = get_cursor()
 
