@@ -7,6 +7,7 @@ from flask import (
     redirect,
     url_for,
     session,
+    current_app
 )
 
 from extensions import mysql, bcrypt
@@ -36,11 +37,15 @@ def login():
 
             if user and bcrypt.check_password_hash(user[1], senha):
                 logger.info("Login realizado com sucesso para %s", email)
+                
+                current_app.session_interface.regenerate(session)
+                
                 session['usuario_id'] = user[0]
 
                 # Busca a empresa vinculada ao usuário autenticado
                 cur.execute("SELECT identificador_url FROM empresas WHERE usuario_id = %s", (user[0],))
                 empresa = cur.fetchone()
+                
                 if empresa:
                     return redirect(f'/{empresa[0]}/admin')
                 else:

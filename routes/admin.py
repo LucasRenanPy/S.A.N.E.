@@ -9,6 +9,7 @@ from flask import (
 
 
 from extensions import mysql, get_cursor
+from decorators import login_required
 
 import logging
 logger = logging.getLogger(__name__)
@@ -16,10 +17,8 @@ logger = logging.getLogger(__name__)
 admin_bp = Blueprint("admin", __name__)
 
 @admin_bp.route('/<identificador>/admin')
+@login_required
 def painel_admin(identificador):
-    if 'usuario_id' not in session:
-        flash("Faça login para continuar.", "warning")
-        return redirect(url_for("auth.login"))
 
     cur = get_cursor()
     
