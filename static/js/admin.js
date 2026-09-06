@@ -166,6 +166,20 @@ function excluirItem() {
 
         form.action = `/produto/excluir/${id}`;
 
+        const csrfToken =
+            document.querySelector(
+                '#editForm input[name="csrf_token"]'
+            ).value;
+
+        const csrfInput =
+            document.createElement('input');
+
+        csrfInput.type = 'hidden';
+        csrfInput.name = 'csrf_token';
+        csrfInput.value = csrfToken;
+
+        form.appendChild(csrfInput);
+
         document.body.appendChild(form);
 
         form.submit();

@@ -3,7 +3,7 @@
 from flask import Flask
 
 from config import Config
-from extensions import mysql, bcrypt, sess
+from extensions import mysql, bcrypt, sess, csrf
 from routes.auth import auth_bp
 from routes.admin import admin_bp
 from routes.loja import loja_bp
@@ -24,6 +24,7 @@ def create_app():
     mysql.init_app(app)
     bcrypt.init_app(app)
     sess.init_app(app)
+    csrf.init_app(app)
     
     app.register_blueprint(auth_bp)
     app.register_blueprint(admin_bp)

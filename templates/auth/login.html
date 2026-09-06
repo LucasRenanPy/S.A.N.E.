@@ -14,6 +14,7 @@ Login
 
     <!-- Formulário de Login -->
     <form id="signin" method="POST" action="{{url_for('auth.login')}}">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
       <div class="inputBox">
         <input type="text" name="email" placeholder="Email" required />
         <i class="fas fa-envelope"></i>
@@ -34,6 +35,7 @@ Login
 
     <!-- Formulário de Cadastro -->
     <form id="signup" action="{{ url_for('auth.cadastrar') }}" method="POST">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
       <div class="inputBox">
         <input type="text" name="nome" placeholder="Nome da empresa" required />
       </div>
