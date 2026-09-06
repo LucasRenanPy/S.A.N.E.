@@ -31,6 +31,7 @@ Painel Administrativo
             enctype="multipart/form-data"
             class="add-form"
         >
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
 
             <select
                 name="tipo"
@@ -311,6 +312,7 @@ Painel Administrativo
           enctype="multipart/form-data"
           action="{{ url_for('produtos.editar_produto', id=0) }}"
         >
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
 
             <h3>Editar Item</h3>
 
