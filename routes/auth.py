@@ -11,6 +11,7 @@ from flask import (
 )
 
 from extensions import mysql, bcrypt
+from utils import validar_senha
 
 import logging
 logger = logging.getLogger(__name__)
@@ -65,8 +66,8 @@ def cadastrar():
     
     nome = request.form.get('nome', '').strip()
     email = request.form.get('email', '').strip().lower()
-    senha = request.form.get('senha', '').strip()
-    senha2 = request.form.get("senha2", "").strip()
+    senha = request.form.get('senha', '')
+    senha2 = request.form.get("senha2", "")
     identificador = request.form.get('identificador_url', '').strip().lower().replace(" ", "-")
     
     logger.info("Tentativa de cadastro para %s", email)
@@ -75,12 +76,16 @@ def cadastrar():
         flash("Preencha todos os campos obrigatórios.", "warning")
         return redirect(url_for("auth.login"))
     
-    if len(senha) < 8:
-            flash("A senha deve possuir pelo menos 8 caracteres.", "warning")
-            return redirect(url_for("auth.login"))
+    senha_valida, erro_senha = validar_senha(senha)
+
+    if not senha_valida:
+        flash(erro_senha, "warning")
+        logger.info("Erro: %s", erro_senha)
+        return redirect(url_for("auth.login"))
     
     if senha != senha2:
         flash("As senhas não coincidem.", "warning")
+        logger.info("Erro: As senhas não coincidem.")
         return redirect(url_for("auth.login"))
 
     cur = mysql.connection.cursor()
