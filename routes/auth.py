@@ -11,7 +11,7 @@ from flask import (
 )
 
 from extensions import mysql, bcrypt
-from utils import validar_senha
+from utils import validar_senha, validar_email
 
 import logging
 logger = logging.getLogger(__name__)
@@ -74,6 +74,13 @@ def cadastrar():
 
     if not nome or not email or not senha or not identificador:
         flash("Preencha todos os campos obrigatórios.", "warning")
+        return redirect(url_for("auth.login"))
+    
+    email_valido, erro_email = validar_email(email)
+
+    if not email_valido:
+        flash(erro_email, "warning")
+        logger.info("Erro: %s", erro_email)
         return redirect(url_for("auth.login"))
     
     senha_valida, erro_senha = validar_senha(senha)

@@ -3,6 +3,7 @@ import unicodedata
 import hashlib
 import requests
 from datetime import datetime
+from email_validator import validate_email, EmailNotValidError
 
 
 def normalizar(txt):
@@ -122,3 +123,21 @@ def senha_comprometida(senha):
             return True
 
     return False
+
+def validar_email(email):
+    if not email:
+        return False, "O e-mail é obrigatório."
+
+    if any(c.isspace() for c in email):
+        return False, "O e-mail não pode conter espaços."
+
+    try:
+        validate_email(
+            email,
+            check_deliverability=False
+        )
+
+    except EmailNotValidError:
+        return False, "Informe um endereço de e-mail válido."
+
+    return True, None
