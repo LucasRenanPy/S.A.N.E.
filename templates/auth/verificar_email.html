@@ -1,0 +1,17 @@
+<h1>Verificação de e-mail</h1>
+
+<p>Seu endereço de e-mail foi localizado.</p>
+
+<form method="POST">
+    <input type="hidden" name="token" value="{{ token }}">
+
+    <input
+        type="hidden"
+        name="csrf_token"
+        value="{{ csrf_token() }}"
+    >
+
+    <button type="submit">
+        Confirmar e-mail
+    </button>
+</form>
