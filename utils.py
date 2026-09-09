@@ -2,6 +2,7 @@ import json
 import unicodedata
 import hashlib
 import requests
+import secrets
 from datetime import datetime
 from email_validator import validate_email, EmailNotValidError
 
@@ -141,3 +142,16 @@ def validar_email(email):
         return False, "Informe um endereço de e-mail válido."
 
     return True, None
+
+def hash_token_verificacao(token):
+    return hashlib.sha256(
+        token.encode("utf-8")
+    ).hexdigest()
+
+
+def gerar_token_verificacao():
+    token = secrets.token_urlsafe(32)
+
+    token_hash = hash_token_verificacao(token)
+
+    return token, token_hash

@@ -11,7 +11,7 @@ from flask import (
 )
 
 from extensions import mysql, bcrypt
-from utils import validar_senha, validar_email
+from utils import validar_senha, validar_email, gerar_token_verificacao, hash_token_verificacao
 
 import logging
 logger = logging.getLogger(__name__)
@@ -120,6 +120,17 @@ def cadastrar():
 
         usuario_id = cur.lastrowid
         
+        token, token_hash = gerar_token_verificacao()
+        
+        cur.execute(
+            """
+            INSERT INTO tokens_verificacao_email
+                (usuario_id, token_hash, expira_em)
+            VALUES
+                (%s, %s, DATE_ADD(NOW(), INTERVAL 24 HOUR))
+            """,
+            (usuario_id, token_hash)
+        )
 
         cur.execute("INSERT INTO empresas (usuario_id, nome, identificador_url) VALUES (%s, %s, %s)", (usuario_id, nome, identificador))
         mysql.connection.commit()
@@ -135,6 +146,125 @@ def cadastrar():
         
     flash("Cadastro realizado com sucesso!", "success")
     return redirect(url_for('auth.login'))
+
+@auth_bp.route("/verificar-email", methods=["GET", "POST"])
+def verificar_email():
+
+    if request.method == "GET":
+        token = request.args.get("token", "")
+
+        if not token:
+            flash("Link de verificação inválido.", "danger")
+            return redirect(url_for("auth.login"))
+
+        token_hash = hash_token_verificacao(token)
+
+        cur = mysql.connection.cursor()
+
+        try:
+            cur.execute(
+                """
+                SELECT
+                    t.id,
+                    t.usuario_id
+                FROM tokens_verificacao_email t
+                WHERE t.token_hash = %s
+                  AND t.usado_em IS NULL
+                  AND t.expira_em > NOW()
+                """,
+                (token_hash,)
+            )
+
+            token_db = cur.fetchone()
+
+        finally:
+            cur.close()
+
+        if not token_db:
+            flash(
+                "O link de verificação é inválido, expirou ou já foi utilizado.",
+                "warning"
+            )
+            return redirect(url_for("auth.login"))
+
+        return render_template(
+            "auth/verificar_email.html",
+            token=token
+        )
+
+    # POST
+
+    token = request.form.get("token", "")
+
+    if not token:
+        flash("Link de verificação inválido.", "danger")
+        return redirect(url_for("auth.login"))
+
+    token_hash = hash_token_verificacao(token)
+
+    cur = mysql.connection.cursor()
+
+    try:
+        cur.execute(
+            """
+            SELECT
+                t.id,
+                t.usuario_id
+            FROM tokens_verificacao_email t
+            WHERE t.token_hash = %s
+              AND t.usado_em IS NULL
+              AND t.expira_em > NOW()
+            FOR UPDATE
+            """,
+            (token_hash,)
+        )
+
+        token_db = cur.fetchone()
+
+        if not token_db:
+            mysql.connection.rollback()
+
+            flash(
+                "O link de verificação é inválido, expirou ou já foi utilizado.",
+                "warning"
+            )
+            return redirect(url_for("auth.login"))
+
+        token_id, usuario_id = token_db
+
+        cur.execute(
+            """
+            UPDATE usuarios
+            SET email_verificado = TRUE
+            WHERE id = %s
+            """,
+            (usuario_id,)
+        )
+
+        cur.execute(
+            """
+            UPDATE tokens_verificacao_email
+            SET usado_em = NOW()
+            WHERE id = %s
+            """,
+            (token_id,)
+        )
+
+        mysql.connection.commit()
+
+    except Exception:
+        mysql.connection.rollback()
+        logger.exception(
+            "Erro ao verificar e-mail do usuário %s",
+            usuario_id if "usuario_id" in locals() else None
+        )
+        raise
+
+    finally:
+        cur.close()
+
+    flash("E-mail verificado com sucesso!", "success")
+    return redirect(url_for("auth.login"))
 
 @auth_bp.route("/logout")
 def logout():

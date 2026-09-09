@@ -11,7 +11,25 @@ USE catalogo_db;
 CREATE TABLE usuarios (
     id INT AUTO_INCREMENT PRIMARY KEY,
     email VARCHAR(255) NOT NULL UNIQUE,
-    senha_hash VARCHAR(255) NOT NULL
+    senha_hash VARCHAR(255) NOT NULL,
+    email_verificado BOOLEAN NOT NULL DEFAULT FALSE
+);
+
+-- =====================================================
+-- VERIFICAÇÃO DE E-MAIL
+-- =====================================================
+
+CREATE TABLE tokens_verificacao_email (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    usuario_id INT NOT NULL,
+    token_hash CHAR(64) NOT NULL UNIQUE,
+    criado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    expira_em DATETIME NOT NULL,
+    usado_em DATETIME DEFAULT NULL,
+
+    FOREIGN KEY (usuario_id)
+        REFERENCES usuarios(id)
+        ON DELETE CASCADE
 );
 
 -- =====================================================
